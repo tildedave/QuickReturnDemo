@@ -66,15 +66,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
 
             bannerView.layer.transform = CATransform3DTranslate(CATransform3DIdentity, 0, pushUp, 0)
             headerView.layer.transform = CATransform3DTranslate(CATransform3DIdentity, 0, pushUp, 0)
-
-        } else if scrollOffset < (bannerHeight + headerHeight) - pushDown {
-            print("banner invisible, header visible")
-
-            // TODO: sticky scroll position needs to play in here
-
-            let pushUp = -(scrollOffset + pushDown)
-            bannerView.layer.transform = CATransform3DTranslate(CATransform3DIdentity, 0, pushUp, 0)
-            headerView.layer.transform = CATransform3DTranslate(CATransform3DIdentity, 0, pushUp, 0)
+            stickyScrollPosition = 0.0
 
         } else {
             print("neither banner inherently visible")
@@ -84,7 +76,12 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                 // By default transform the bottom of the header to the top of the view
                 headerTransform = CATransform3DTranslate(headerTransform, 0, -(bannerHeight + headerHeight), 0)
                 // As we scroll up, down
-                headerTransform = CATransform3DTranslate(headerTransform, 0, min(headerHeight, stickyScrollPosition - scrollOffset), 0)
+                let amountShowing = min(headerHeight, stickyScrollPosition - scrollOffset)
+                headerTransform = CATransform3DTranslate(headerTransform, 0, amountShowing, 0)
+
+                if headerHeight < amountShowing + 1 {
+                    stickyScrollPosition = scrollOffset + headerHeight
+                }
 
                 headerView.layer.transform = headerTransform
                 return
