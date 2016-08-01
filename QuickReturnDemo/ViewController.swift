@@ -28,8 +28,10 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let tableView = tableViewController.tableView
         self.addChildViewController(tableViewController)
+        let tableView = tableViewController.tableView
+        tableView.frame = containerView.frame
+        tableView.setNeedsLayout()
         self.containerView.addSubview(tableView)
 
         let headerFrame = self.headerView.frame
